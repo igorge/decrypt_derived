@@ -1,0 +1,25 @@
+#!/bin/sh
+
+PREREQ="cryptroot"
+prereqs()
+{
+	echo "$PREREQ"
+}
+
+case $1 in
+	prereqs)
+		prereqs
+		exit 0
+	;;
+esac
+
+
+. /scripts/functions
+
+log_begin_msg "Unlocking derived crypto devices"
+echo  "Unlocking derived"
+/lib/cryptsetup/scripts/decrypt_derived crypt_root | cryptsetup luksOpen /dev/disk/by-id/ata-ASUS-PHISON_SSD_SOQ2783241-part1 crypt_swap1  --key-file -
+/lib/cryptsetup/scripts/decrypt_derived crypt_root | cryptsetup luksOpen /dev/disk/by-id/ata-ASUS-PHISON_SSD_SOQ2783241-part2 crypt_sysfs2  --key-file -
+log_end_msg
+
+exit 0
